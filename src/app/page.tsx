@@ -23,6 +23,12 @@ export default function VainHairBeautyPage() {
   const [selectedService, setSelectedService] = useState<string>("signature-cut");
   const [bookingStep, setBookingStep] = useState<"form" | "confirmed">("form");
 
+  // Booking form state
+  const [bookingName, setBookingName] = useState("");
+  const [bookingPhone, setBookingPhone] = useState("");
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
+
   // Bridal inquiry state
   const [bridalForm, setBridalForm] = useState({
     brideName: "",
@@ -34,6 +40,62 @@ export default function VainHairBeautyPage() {
     notes: "",
   });
   const [bridalSubmitted, setBridalSubmitted] = useState(false);
+  const [bridalLoading, setBridalLoading] = useState(false);
+  const [bridalError, setBridalError] = useState<string | null>(null);
+
+  const handleBookingSubmit = async () => {
+    if (!bookingName.trim() || !bookingPhone.trim()) {
+      setBookingError("Please enter your name and contact phone.");
+      return;
+    }
+    setBookingLoading(true);
+    setBookingError(null);
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: bookingName,
+          phone: bookingPhone,
+          service: selectedService,
+          category: activeCategory,
+        }),
+      });
+      if (res.ok) {
+        setBookingStep("confirmed");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setBookingError(data.error || "Failed to confirm booking. Please try again.");
+      }
+    } catch (err: any) {
+      setBookingError(err?.message || "An unexpected network error occurred.");
+    } finally {
+      setBookingLoading(false);
+    }
+  };
+
+  const handleBridalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBridalLoading(true);
+    setBridalError(null);
+    try {
+      const res = await fetch("/api/bridal-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bridalForm),
+      });
+      if (res.ok) {
+        setBridalSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setBridalError(data.error || "Failed to submit bridal inquiry. Please try again.");
+      }
+    } catch (err: any) {
+      setBridalError(err?.message || "An unexpected network error occurred.");
+    } finally {
+      setBridalLoading(false);
+    }
+  };
 
   const services = {
     styling: [
@@ -269,21 +331,31 @@ export default function VainHairBeautyPage() {
                         <input
                           type="text"
                           placeholder="Your Name"
+                          value={bookingName}
+                          onChange={(e) => setBookingName(e.target.value)}
                           className="bg-stone-900 border border-stone-800 rounded-lg px-3 py-2 text-xs text-white placeholder:text-stone-600 focus:outline-none focus:border-rose-400"
                         />
                         <input
                           type="tel"
                           placeholder="Mobile 04xx xxx xxx"
+                          value={bookingPhone}
+                          onChange={(e) => setBookingPhone(e.target.value)}
                           className="bg-stone-900 border border-stone-800 rounded-lg px-3 py-2 text-xs text-white placeholder:text-stone-600 focus:outline-none focus:border-rose-400"
                         />
                       </div>
                       <button
                         type="button"
-                        onClick={() => setBookingStep("confirmed")}
-                        className="w-full py-3 bg-gradient-to-r from-rose-200 via-rose-300 to-amber-200 text-stone-950 font-semibold rounded-xl text-xs uppercase tracking-widest transition-all shadow-md shadow-rose-300/10"
+                        disabled={bookingLoading}
+                        onClick={handleBookingSubmit}
+                        className="w-full py-3 bg-gradient-to-r from-rose-200 via-rose-300 to-amber-200 text-stone-950 font-semibold rounded-xl text-xs uppercase tracking-widest transition-all shadow-md shadow-rose-300/10 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Confirm Booking &bull; 24/7 Instant
+                        {bookingLoading ? "Confirming..." : "Confirm Booking \u2022 24/7 Instant"}
                       </button>
+                      {bookingError && (
+                        <p className="text-xs text-red-400 text-center font-medium">
+                          {bookingError}
+                        </p>
+                      )}
                       <p className="text-[10px] text-center text-stone-500">
                         Prefer phone? Call our Murphy St salon: (03) 5721 0000
                       </p>
@@ -345,10 +417,7 @@ export default function VainHairBeautyPage() {
                   </div>
                 ) : (
                   <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setBridalSubmitted(true);
-                    }}
+                    onSubmit={handleBridalSubmit}
                     className="space-y-4"
                   >
                     <div className="border-b border-stone-800 pb-3">
@@ -356,7 +425,7 @@ export default function VainHairBeautyPage() {
                       <p className="text-xs text-stone-400">Direct coordination with Prue at Vain Hair &amp; Beauty</p>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="grid sm:grid-cols-3 gap-3">
                       <div>
                         <label className="block text-[11px] uppercase tracking-wider text-stone-400 mb-1">
                           Bride&apos;s Name *
@@ -380,6 +449,18 @@ export default function VainHairBeautyPage() {
                           placeholder="04xx xxx xxx"
                           value={bridalForm.phone}
                           onChange={(e) => setBridalForm({ ...bridalForm, phone: e.target.value })}
+                          className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] uppercase tracking-wider text-stone-400 mb-1">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="name@example.com"
+                          value={bridalForm.email}
+                          onChange={(e) => setBridalForm({ ...bridalForm, email: e.target.value })}
                           className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-400"
                         />
                       </div>
@@ -444,10 +525,16 @@ export default function VainHairBeautyPage() {
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-gradient-to-r from-rose-200 via-rose-300 to-amber-200 text-stone-950 font-semibold rounded-xl text-xs uppercase tracking-widest transition-all"
+                      disabled={bridalLoading}
+                      className="w-full py-3 bg-gradient-to-r from-rose-200 via-rose-300 to-amber-200 text-stone-950 font-semibold rounded-xl text-xs uppercase tracking-widest transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Request Bridal Package Availability
+                      {bridalLoading ? "Submitting..." : "Request Bridal Package Availability"}
                     </button>
+                    {bridalError && (
+                      <p className="text-xs text-red-400 text-center font-medium">
+                        {bridalError}
+                      </p>
+                    )}
                     <p className="text-[10px] text-center text-stone-500">
                       Direct Email: pruesiperki@bigpond.com &bull; We reply within 24 hours
                     </p>
