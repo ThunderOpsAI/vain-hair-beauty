@@ -3,11 +3,136 @@
 @tailwind utilities;
 
 :root {
-  --background: #0c0a09;
-  --foreground: #fafaf9;
+  /* Default: High-Fashion Rose Gold & Noir Velvet */
+  --primary-50: #fff1f2;
+  --primary-100: #ffe4e6;
+  --primary-200: #fecdd3;
+  --primary-300: #fda4af;
+  --primary-400: #fb7185;
+  --primary-500: #e11d48;
+  --primary-600: #be123c;
+  --primary-700: #9f1239;
+  --primary-800: #881337;
+  --primary-900: #4c0519;
+
+  --surface-50: #121013;
+  --surface-100: #18151a;
+  --surface-200: #231f26;
+  --surface-300: #332d38;
+  --surface-400: #62576b;
+  --surface-500: #93869d;
+  --surface-600: #c2b7cb;
+  --surface-700: #ded7e5;
+  --surface-800: #f1edf5;
+  --surface-900: #faf7fc;
+  --surface-950: #0a080c;
+
+  --background: #0d0b0f;
+  --foreground: #faf7fc;
+}
+
+.theme-champagne {
+  /* Warm Champagne & Cashmere Blondes */
+  --primary-50: #fefce8;
+  --primary-100: #fef9c3;
+  --primary-200: #fef08a;
+  --primary-300: #fde047;
+  --primary-400: #eab308;
+  --primary-500: #d4af37;
+  --primary-600: #b8860b;
+  --primary-700: #92400e;
+  --primary-800: #78350f;
+  --primary-900: #451a03;
+
+  --surface-50: #14120e;
+  --surface-100: #1c1913;
+  --surface-200: #29241b;
+  --surface-300: #3d3527;
+  --surface-400: #736449;
+  --surface-500: #a89572;
+  --surface-600: #d4c4a4;
+  --surface-700: #ece2ce;
+  --surface-800: #f6f1e5;
+  --surface-900: #fdfbf7;
+  --surface-950: #0b0906;
+
+  --background: #0f0d0a;
+  --foreground: #fdfbf7;
+}
+
+.theme-botanical {
+  /* Sage Botanical & Organic Hair Rituals */
+  --primary-50: #f0fdf4;
+  --primary-100: #dcfce7;
+  --primary-200: #bbf7d0;
+  --primary-300: #86efac;
+  --primary-400: #4ade80;
+  --primary-500: #10b981;
+  --primary-600: #059669;
+  --primary-700: #047857;
+  --primary-800: #065f46;
+  --primary-900: #064e3b;
+
+  --surface-50: #0e1411;
+  --surface-100: #141c18;
+  --surface-200: #1c2722;
+  --surface-300: #293831;
+  --surface-400: #4f695d;
+  --surface-500: #78998a;
+  --surface-600: #a7c5b7;
+  --surface-700: #d0e3db;
+  --surface-800: #ebf3ef;
+  --surface-900: #f7faf9;
+  --surface-950: #070a09;
+
+  --background: #0a0e0c;
+  --foreground: #f7faf9;
+}
+
+.theme-copper {
+  /* Sunset Copper & Rich Warm Brunettes */
+  --primary-50: #fff7ed;
+  --primary-100: #ffedd5;
+  --primary-200: #fed7aa;
+  --primary-300: #fdba74;
+  --primary-400: #fb923c;
+  --primary-500: #ea580c;
+  --primary-600: #c2410c;
+  --primary-700: #9a3412;
+  --primary-800: #7c2d12;
+  --primary-900: #431407;
+
+  --surface-50: #14100e;
+  --surface-100: #1c1512;
+  --surface-200: #291e19;
+  --surface-300: #3c2c25;
+  --surface-400: #715548;
+  --surface-500: #a4806f;
+  --surface-600: #d0b0a1;
+  --surface-700: #ead7cd;
+  --surface-800: #f6ede7;
+  --surface-900: #fdfaf8;
+  --surface-950: #0b0807;
+
+  --background: #0f0b09;
+  --foreground: #fdfaf8;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--surface-800);
+  background: var(--surface-950);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Subtle Shimmer & Salon Editorial Accents */
+.bg-salon-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.bg-radial-glow {
+  background-image: radial-gradient(circle at 50% 0%, var(--primary-500) 0%, transparent 60%);
+  opacity: 0.12;
 }
